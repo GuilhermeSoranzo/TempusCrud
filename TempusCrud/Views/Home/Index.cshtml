@@ -1,0 +1,43 @@
+﻿@model List<ClienteModel>
+@{
+    ViewData["Title"] = "Página Inicial";
+}
+
+<div class="card ">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs pull-right" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="Hoje-tab" data-toggle="tab" href="#Hoje" role="tab" aria-controls="Hoje" aria-selected="true">Hoje</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="semana-tab" data-toggle="tab" href="#semana" role="tab" aria-controls="semana" aria-selected="false">Semana</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="mes-tab" data-toggle="tab" href="#mes" role="tab" aria-controls="mes" aria-selected="false">Mês</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-body">
+        <div class="tab-content" id="myTabContent">
+            @if (Model != null && Model.Any())
+            {
+                <div class="tab-pane fade" id="Hoje" role="tabpanel" aria-labelledby="Hoje-tab">
+                    <b>Quantidade de clientes: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddDays(-1))).Count()
+                    <br />
+                    <b>Quantidade de clientes maiores de 18 anos com renda média maior: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddDays(-1)) && (DateTime.Now.Year - x.DataNascimento.Year >= 18) && (x.RendaFamiliar > (Model.Sum(x => x.RendaFamiliar) / Model.Count()))).Count()
+                </div>
+                <div class="tab-pane fade show active" id="semana" role="tabpanel" aria-labelledby="semana-tab">
+                    <b>Quantidade de clientes: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddDays(-7))).Count()
+                    <br />
+                    <b>Quantidade de clientes maiores de 18 anos com renda média maior: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddDays(-7)) && (DateTime.Now.Year - x.DataNascimento.Year >= 18) && (x.RendaFamiliar > (Model.Sum(x => x.RendaFamiliar) / Model.Count()))).Count()
+                </div>
+                <div class="tab-pane fade" id="mes" role="tabpanel" aria-labelledby="mes-tab">
+                    <b>Quantidade de clientes: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddMonths(-1))).Count()
+                    <br />
+                    <b>Quantidade de clientes maiores de 18 anos com renda média maior: </b>@Model.Where(x => x.DataCadastro > (DateTime.Now.AddMonths(-1)) && (DateTime.Now.Year - x.DataNascimento.Year >= 18) && (x.RendaFamiliar > (Model.Sum(x => x.RendaFamiliar) / Model.Count()))).Count()
+                </div>
+            }
+        </div>
+    </div>
+</div>
